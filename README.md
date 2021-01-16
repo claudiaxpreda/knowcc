@@ -1,3 +1,3 @@
-# laborator-4
+# knowCC
 
-Warmup pentru proiect
+Cloud Computing project
