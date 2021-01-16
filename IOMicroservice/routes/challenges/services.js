@@ -22,14 +22,8 @@ const getChallengesByUserId = async (userId) => {
     const challenges = await query(`SELECT c.id, c.created_at, t.user_id as original_user_id, c.opponent_user_id, c.original_test_id, c.accepted_test_id FROM challenges c JOIN tests t ON c.original_test_id = t.id WHERE t.user_id = ${userId} OR c.opponent_user_id = ${userId}`)
     const challengesWithTests = await Promise.all(challenges.map(async item => {
       let test = {}
-
-      if (userId == item.original_user_id) {
-        test = await getTestById(item.original_user_id, item.original_test_id)
-      } else {
-        if (item.accepted_test_id) {
-          test = await getTestById(item.opponent_user_id, item.accepted_test_id)
-        }
-      }
+      const originalTest = await getTestById(item.original_user_id, item.original_test_id)
+      const opponentTest = item.accepted_test_id ? await getTestById(item.opponent_user_id, item.accepted_test_id) : null
 
       return {
         id: item.id,
@@ -38,7 +32,8 @@ const getChallengesByUserId = async (userId) => {
         opponentUserId: item.opponent_user_id,
         originalTestId: item.original_test_id,
         opponentTestId: item.accepted_test_id,
-        test
+        originalTest,
+        opponentTest
       }
     }))
 

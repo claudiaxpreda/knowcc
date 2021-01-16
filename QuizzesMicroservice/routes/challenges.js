@@ -1,7 +1,7 @@
 const Router = require('express').Router()
 
 const { sendRequest } = require('../http-client')
-const { verifyAndDecodeToken } = require('../utils')
+const { verifyAndDecodeToken, answersArrayToTestObject } = require('../utils')
 
 const IO_SERVICE_HOST = process.env.IO_SERVICE_HOST || 'localhost'
 
@@ -20,7 +20,13 @@ Router.get('/', async (req, res) => {
 
   const response = await sendRequest(options)
 
-  res.json(response)
+  res.json(
+    response.map(challenge => ({
+      ...challenge,
+      originalTest: answersArrayToTestObject(challenge.originalTest),
+      opponentTest: answersArrayToTestObject(challenge.opponentTest)
+    }))
+  )
 })
 
 Router.post('/', async (req, res) => {

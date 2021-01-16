@@ -25,7 +25,7 @@ Router.get('/', async (req, res) => {
   const answers = await sendRequest(options)
 
 
-  if (answers.length > 0 && id) {
+  if (id) {
     const testStartTimestamp = answers[0].testCreatedAt
     const dates = answers.map(item => item.answerCreatedAt)
     const lastResponseTimestamp = dates.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b))
