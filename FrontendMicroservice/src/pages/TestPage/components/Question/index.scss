@@ -1,0 +1,13 @@
+.Question {
+  width: 100%;
+
+  > h1 {
+    font-size: 20px;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .AnswersList {
+    margin-top: 40px;
+  }
+}

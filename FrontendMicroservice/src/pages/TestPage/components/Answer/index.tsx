@@ -1,4 +1,6 @@
-// import './index.scss'
+import * as React from 'react'
+
+import './index.scss'
 
 export interface IAnswerProps {
   text: string

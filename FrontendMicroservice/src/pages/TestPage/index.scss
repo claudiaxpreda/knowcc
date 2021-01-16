@@ -1,0 +1,11 @@
+.TestPage {
+  > h1 {
+    text-align: left;
+    font-size: 26px;
+  }
+
+  .QuestionsCarousel {
+    display: flex;
+    width: fit-content;
+  }
+}

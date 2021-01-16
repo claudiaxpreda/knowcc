@@ -1,0 +1,51 @@
+.Customizer {
+  height: 100%;
+
+  > h1,
+  > h2 {
+    text-align: left;
+    margin: 5px 0;
+  }
+
+  > h1 {
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  > h2 {
+    font-size: 18px;
+    font-weight: 400;
+    opacity: 0.6;
+  }
+
+  > input {
+    height: 40px;
+    width: 40px;
+    font-size: 30px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: var(--background-light-color);
+    color: var(--font-color);
+    outline: none;
+    border: 0;
+    font-weight: 500;
+    font-family: 'Montserrat';
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .StartButton {
+    margin-top: 20px;
+  }
+
+  .Categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    justify-items: center;
+    row-gap: 20px;
+
+    margin-top: 10px;
+  }
+}

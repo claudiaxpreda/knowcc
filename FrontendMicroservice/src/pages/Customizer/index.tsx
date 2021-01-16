@@ -1,11 +1,15 @@
 import * as React from 'react'
 
-// import './index.scss'
 
 import TextInput from 'components/TextInput'
 import UserBox from 'components/UserBox'
+import CategoryBox from 'components/CategoryBox'
+import Button from 'components/Button'
+import UsersList from 'components/UsersList'
 
 import { User } from 'services/users/types'
+
+import './index.scss'
 
 interface Category {
   label: string
@@ -56,6 +60,8 @@ export default function Customizer(props: ICustomizerProps) {
 
   const onUserBoxClick = (id: number) => {
     setChosenOpponent(props.users.find(user => user.id === id) || null)
+    setKeyword('')
+    props.onKeywordChange('')
   }
 
   const validateFields = () => {
@@ -72,34 +78,43 @@ export default function Customizer(props: ICustomizerProps) {
     return ''
   }
 
-  const checkboxes = categories.map(category => (
-    <div key={category.label}>
-      <p>{category.label}</p>
-      <input
-        type='checkbox'
-        id={category.label}
-        checked={category.checked}
-        onChange={() => onCheckboxChange(category.label)}
-      />
-    </div>
+  const categoryBoxes = categories.map(category => (
+    // <div key={category.label}>
+    //   <p>{category.label}</p>
+    //   <input
+    //     type='checkbox'
+    //     id={category.label}
+    //     checked={category.checked}
+    //     onChange={() => onCheckboxChange(category.label)}
+    //   />
+    // </div>
+    <CategoryBox key={category.label} label={category.label} checked={category.checked} onChange={() => onCheckboxChange(category.label)} />
   ))
 
   return (
     <div className='Customizer'>
-      {checkboxes}
+      <h1>Let's Play</h1>
+      <h2>Choose topics</h2>
+      <div className='Categories'>
+        {categoryBoxes}
+      </div>
+      <h2>Choose number of questions</h2>
       <input type='number' value={count} onChange={onCountChange} min={1} max={MAX_COUNT} />
-      <button disabled={validateFields() !== ''} onClick={onStartTest}>Start Test</button>
       <p>{validateFields()}</p>
-      <UserBox data={chosenOpponent} />
+      <h2>Choose opponent</h2>
+      <UsersList users={props.users} onUserBoxClick={onUserBoxClick} />
       <TextInput
-        label='Search for users'
+        label='Search users'
         value={keyword}
         onChange={(value: string) => {
           props.onKeywordChange(value)
           setKeyword(value)
         }}
       />
-      {props.users.map(item => <UserBox key={item.id} data={item} onClick={onUserBoxClick} />)}
+      <UserBox data={chosenOpponent} />
+      <div className='StartButton'>
+        <Button text='Start Test' onClick={onStartTest} />
+      </div>
     </div>
   )
 }

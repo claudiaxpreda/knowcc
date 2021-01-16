@@ -7,6 +7,9 @@ import TestPage from 'pages/TestPage'
 import Result from 'pages/Result'
 import Challenges from 'pages/Challenges'
 
+import Header from 'components/Header'
+import Footer from 'components/Footer'
+
 /* ---------------------- 📡 Request methods and types ---------------------- */
 import { getCategories, getQuestions, getTestResultById } from 'services/questions'
 import { QuestionsSet, dummyQuestionsSet, TestResult, dummyTestResult } from 'services/questions/types'
@@ -14,7 +17,7 @@ import { getUsersByKeyword } from 'services/users'
 import { User } from 'services/users/types'
 import { getChallenges } from 'services/challenges'
 
-// import './index.scss'
+import './index.scss'
 
 export type Page = 'customizer' | 'test' | 'result' | 'history' | 'challenges'
 
@@ -62,9 +65,8 @@ export default function Main() {
     }
   }
 
-  const onLogout = () => {
-    localStorage.removeItem('jwt_token')
-    window.location.reload()
+  const onFooterPageChange = (page: Page) => {
+    setPage(page)
   }
 
   const getContent = () => {
@@ -91,11 +93,16 @@ export default function Main() {
 
   return (
     <div className='Main'>
-      <button onClick={onLogout}>Log out</button>
-      {getContent()}
-      <button onClick={() => setPage('customizer')}>Home</button>
+      {/* <Header /> */}
+
+      <div className='Content'>
+        {getContent()}
+      </div>
+      {/* <button onClick={() => setPage('customizer')}>Home</button>
       <button onClick={() => setPage('history')}>History</button>
-      <button onClick={() => setPage('challenges')}>Challenges</button>
+      <button onClick={() => setPage('challenges')}>Challenges</button> */}
+
+      <Footer currentPage={page} onPageChange={onFooterPageChange} />
     </div>
   )
 }

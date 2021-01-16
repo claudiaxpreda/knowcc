@@ -1,0 +1,19 @@
+.TestProgress {
+  display: grid;
+  justify-items: center;
+
+  .ProgressQuestion {
+    height: 3px;
+    width: 90%;
+    background-color: rgba(#fff, 0.5);
+    box-sizing: border-box;
+
+    &.highlighted {
+      background-color: var(--primary-color);
+    }
+
+    &.current {
+      background-color: var(--text-color);
+    }
+  }
+}
