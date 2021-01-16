@@ -1,21 +1,21 @@
 const { Pool } = require('pg')
 const { getSecret } = require('docker-secret')
 
-// const options = {
-//   host: process.env.PGHOST,
-//   database: process.env.PGDATABASE,
-//   port: process.env.PGPORT,
-//   user: process.env.NODE_ENV === 'development' ? process.env.PGUSER : getSecret(process.env.PGUSER_FILE),
-//   password: process.env.NODE_ENV === 'development' ? process.env.PGPASSWORD : getSecret(process.env.PGPASSWORD_FILE)
-// }
-
 const options = {
-  host: 'localhost',
-  database: 'knowcc',
-  user: 'admin',
-  password: 'admin',
-  port: '5432'
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  port: process.env.PGPORT,
+  user: process.env.NODE_ENV === 'development' ? process.env.PGUSER : getSecret(process.env.PGUSER_FILE),
+  password: process.env.NODE_ENV === 'development' ? process.env.PGPASSWORD : getSecret(process.env.PGPASSWORD_FILE)
 }
+
+// const options = {
+//   host: 'localhost',
+//   database: 'knowcc',
+//   user: 'admin',
+//   password: 'admin',
+//   port: '5432'
+// }
 
 const pool = new Pool(options)
 
