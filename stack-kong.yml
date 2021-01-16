@@ -1,28 +1,26 @@
 version: '3.3'
 
 services:
-    gateway-service:
-        image: claudiapreda2307/knowcc-gateway:init
-        ports:
-            - 3000:3000
+    kong:
+        image: kong:latest
+        volumes:
+         - ./kong:/usr/local/kong/declarative
         environment:
-            NODE_ENV: development
-            AUTH_SERVICE_HOST: knowcc-cluster_auth-service
-            QUIZZES_SERVICE_HOST: knowcc-cluster_quizzes-service
-        # deploy:
-        #     replicas: 3
-        #     placement:
-        #         max_replicas_per_node: 2
-        #     update_config:
-        #         parallelism: 2
-        #         delay: 10s
-        #     rollback_config:
-        #         order: stop-first
-        #     restart_policy:
-        #         condition: on-failure
+            KONG_DATABASE: 'off'
+            KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+            KONG_PROXY_ACCESS_LOG: /dev/stdout
+            KONG_ADMIN_ACCESS_LOG: /dev/stdout
+            KONG_PROXY_ERROR_LOG: /dev/stderr
+            KONG_ADMIN_ERROR_LOG: /dev/stderr
+            KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+        ports:
+            - 80:8000
+            - 443:8443
+        deploy:
+            placement:
+                constraints: [node.role == manager]
         networks:
-            - frontend-gateway-net
-            - backend-auth-net
+            - gateway-net
         depends_on:
             - auth-service
             - quizzes-service
@@ -48,7 +46,7 @@ services:
         #     restart_policy:
         #         condition: on-failure
         networks:
-            - backend-auth-net
+            - gateway-net
             - db-auth-net
     
     quizzes-service:
@@ -70,7 +68,7 @@ services:
         #         condition: on-failure
         networks:
             - backend-io-net
-            - backend-auth-net
+            - gateway-net
         depends_on:
             - io-service
           
@@ -129,7 +127,7 @@ services:
             - gateway-service
         networks:
             - db-adminer-net
-            - frontend-gateway-net
+            - gateway-net
     
     frontend-service:
         image: claudiapreda2307/knowcc-frontend:init
@@ -148,8 +146,6 @@ services:
         #         order: stop-first
         #     restart_policy:
         #         condition: on-failure
-        networks:
-            - frontend-gateway-net
         depends_on:
             - gateway-service
     
@@ -158,7 +154,6 @@ networks:
     db-io-net:
     db-auth-net:
     backend-io-net:
-    frontend-gateway-net:
-    backend-auth-net:
+    gateway-net:
 volumes:
     postgres-volume:
