@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
     gateway-service:
-        image: claudiapreda2307/knowcc-gateway:init
+        build: ./ApiGatewayMicroservice
         ports:
             - 3000:3000
         environment:
@@ -28,7 +28,7 @@ services:
             - quizzes-service
 
     auth-service:
-        image: claudiapreda2307/knowcc-auth:latest
+        build: ./AuthMicroservice
         environment:
             PGUSER: admin
             PGPASSWORD: admin
@@ -52,7 +52,7 @@ services:
             - db-auth-net
     
     quizzes-service:
-        image: claudiapreda2307/knowcc-quizzes:init
+        build: ./QuizzesMicroservice
         environment:
             IO_SERVICE_HOST: io-service
             AUTH_SERVICE_HOST: auth-service
@@ -75,7 +75,7 @@ services:
             - io-service
           
     io-service:
-        image: claudiapreda2307/knowcc-io:init
+        build: ./IOMicroservice
         environment:
             PGUSER: admin
             PGPASSWORD: admin
@@ -132,12 +132,12 @@ services:
             - frontend-gateway-net
     
     frontend-service:
-        image: claudiapreda2307/knowcc-frontend:init
+        build: ./FrontendMicroservice
         ports:
             - 8000:8000
         environment:
             NODE_ENV: development
-            REACT_APP_GATEWAY_SERVICE_HOST: gateway-service
+            GATEWAY_SERVICE_HOST: localhost
         # deploy:
         #     replicas: 2
         #     placement:
