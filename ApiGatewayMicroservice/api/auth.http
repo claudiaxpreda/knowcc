@@ -1,0 +1,107 @@
+# Intra pentru prima oara in aplicatie si isi face un cont
+POST http://localhost:3000/api/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "username": "themishu",
+  "email": "predoiumihai1@gmail.com",
+  "password": "parola"
+}
+
+###
+
+# Se logheaza in aplicatie
+POST http://localhost:3000/api/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "username": "mihai",
+  "password": "parola"
+}
+
+###
+
+# Check user login status
+GET http://localhost:3000/api/auth/login HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtaWhhaSIsImlhdCI6MTYxMDc2MDkzMywiaXNzIjoia25vd2NjIn0.U_PeqfRUIzubHiZHyNOdNC37joojcp1WopJMLz2pHso
+
+###
+
+# Incarca lista de categorii din care poate alege
+GET http://localhost:3000/api/questions/categories HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtaWhhaSIsImlhdCI6MTYxMDc2MDkzMywiaXNzIjoia25vd2NjIn0.U_PeqfRUIzubHiZHyNOdNC37joojcp1WopJMLz2pHso
+
+###
+
+# Cere o lista de intrebari din care va da testul
+GET http://localhost:3000/api/questions?count=2&categories=Sports HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJtaXNodSIsImlhdCI6MTYxMDc2NTA0NiwiaXNzIjoia25vd2NjIn0.oK0oggRPZg044w8GdndZxNzTzStUsVCleHl6Yex3lGk
+
+###
+
+# Cere un test pe baza id-ului acestuia
+GET http://localhost:3000/api/tests?id=27 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJtaXNodSIsImlhdCI6MTYxMDc2NTA0NiwiaXNzIjoia25vd2NjIn0.oK0oggRPZg044w8GdndZxNzTzStUsVCleHl6Yex3lGk
+
+###
+
+GET http://localhost:3000/api/tests/ HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtaWhhaSIsImlhdCI6MTYxMDc2NTc4NSwiaXNzIjoia25vd2NjIn0.fyBb2DdP1btC3_kDTKNXNYTBhWuoBtXF3pKnDiGLMcQ
+
+###
+
+# Creaza un nou test
+POST http://localhost:3000/api/tests HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtaWhhaSIsImlhdCI6MTYxMDc2MDkzMywiaXNzIjoia25vd2NjIn0.U_PeqfRUIzubHiZHyNOdNC37joojcp1WopJMLz2pHso
+
+###
+
+POST http://localhost:3000/api/tests/answers HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtaWhhaSIsImlhdCI6MTYxMDc2MDkzMywiaXNzIjoia25vd2NjIn0.U_PeqfRUIzubHiZHyNOdNC37joojcp1WopJMLz2pHso
+
+{
+  "testId": 8,
+  "answer": "Warsaw",
+  "questionId": 2
+}
+
+###
+
+GET http://localhost:3000/api/challenges HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtaWhhaSIsImlhdCI6MTYxMDc2MDkzMywiaXNzIjoia25vd2NjIn0.U_PeqfRUIzubHiZHyNOdNC37joojcp1WopJMLz2pHso
+
+###
+
+POST http://localhost:3000/api/challenges HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtaWhhaSIsImlhdCI6MTYxMDc2MDkzMywiaXNzIjoia25vd2NjIn0.U_PeqfRUIzubHiZHyNOdNC37joojcp1WopJMLz2pHso
+
+{
+  "originalTestId": 1,
+  "challengedUserId": 2
+}
+
+###
+
+PATCH http://localhost:3000/api/challenges HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJtaXNodSIsImlhdCI6MTYxMDc2NDEzNiwiaXNzIjoia25vd2NjIn0.4N48ON2SXOD0IrYlmMEnXfPZVysAuJTP3V1euxznciw
+
+{
+  "testId": 17,
+  "challengeId": 1
+}
+
+###
+
+GET http://localhost:3000/api/users?keyword=ish HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtaWhhaSIsImlhdCI6MTYxMDc2MDkzMywiaXNzIjoia25vd2NjIn0.U_PeqfRUIzubHiZHyNOdNC37joojcp1WopJMLz2pHso
