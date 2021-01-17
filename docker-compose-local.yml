@@ -1,44 +1,60 @@
-version: '3.3'
+version: '3.8'
 
 services:
-    # gateway-service:
-    #     build: ./ApiGatewayMicroservice
-    #     environment:
-    #         BOOKS_SERVICE_API_ROUTE: books-service/api
-    #         NODE_ENV: development
-    #     ports:
-    #         - 5000:3000
-    #     networks:
-    #         - gateway-books
-    #     depends_on:
-    #         - books-service
+    gateway-service:
+        build: ./ApiGatewayMicroservice
+        ports:
+            - 80:3000
+        environment:
+            NODE_ENV: development
+            AUTH_SERVICE_HOST: auth-service
+            QUIZZES_SERVICE_HOST: quizzes-service
+        networks:
+            - frontend-gateway-net
+            - backend-auth-net
+        depends_on:
+            - auth-service
+            - quizzes-service
 
-    # books-service:
-    #     build: ./BooksMicroservice
-    #     environment:
-    #         IO_SERVICE_API_ROUTE: io-service/api
-    #         NODE_ENV: development
-    #     networks:
-    #         - gateway-books
-    #         - books-io
-    #     depends_on:
-    #         - io-service
-
-    # io-service:
-    #     build: ./IOMicroservice
-    #     environment:
-    #         PGUSER: admin
-    #         PGPASSWORD: admin
-    #         PGHOST: db
-    #         PGPORT: 5432
-    #         PGDATABASE: books
-    #         NODE_ENV: development
-    #     networks:
-    #         - books-io
-    #         - io-postgres
-
-    #     depends_on:
-    #         - db
+    auth-service:
+        build: ./AuthMicroservice
+        environment:
+            PGUSER: admin
+            PGPASSWORD: admin
+            PGHOST: db
+            PGPORT: 5432
+            PGDATABASE: knowcc
+            NODE_ENV: development
+        networks:
+            - backend-auth-net
+            - db-auth-net
+    
+    quizzes-service:
+        build: ./QuizzesMicroservice
+        environment:
+            IO_SERVICE_HOST: io-service
+            AUTH_SERVICE_HOST: auth-service
+            NODE_ENV: development
+        networks:
+            - backend-io-net
+            - backend-auth-net
+        depends_on:
+            - io-service
+          
+    io-service:
+        build: ./IOMicroservice
+        environment:
+            PGUSER: admin
+            PGPASSWORD: admin
+            PGHOST: db
+            PGPORT: 5432
+            PGDATABASE: knowcc
+            NODE_ENV: development
+        networks:
+            - db-io-net
+            - backend-io-net
+        depends_on:
+            - db
 
     db:
         image: postgres:12
@@ -46,29 +62,42 @@ services:
             POSTGRES_DB: knowcc
             POSTGRES_USER: admin
             POSTGRES_PASSWORD: admin
-        ports:
-            - 5432:5432
         volumes:
             - ./Database/init-db.sql:/docker-entrypoint-initdb.d/init.sql
             - postgres-volume:/var/lib/postgresql/data
         networks:
-            # - io-postgres
-            - postgres-adminer
-
+            - db-adminer-net
+            - db-io-net
+            - db-auth-net
     adminer:
         image: adminer
         ports:
             - 8080:8080
-        networks:
-            - postgres-adminer
         depends_on:
             - db
-
+            - gateway-service
+        networks:
+            - db-adminer-net
+            - frontend-gateway-net
+    
+    frontend-service:
+        build: ./FrontendMicroservice
+        ports:
+            - 8000:8000
+        environment:
+            NODE_ENV: development
+            GATEWAY_SERVICE_HOST: localhost
+        networks:
+            - frontend-gateway-net
+        depends_on:
+            - gateway-service
+    
 networks:
-    # gateway-books:
-    # books-io:
-    # io-postgres:
-    postgres-adminer:
-
+    db-adminer-net:
+    db-io-net:
+    db-auth-net:
+    backend-io-net:
+    frontend-gateway-net:
+    backend-auth-net:
 volumes:
     postgres-volume:

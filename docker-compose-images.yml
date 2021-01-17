@@ -1,72 +1,104 @@
 version: '3.8'
 
 services:
-    gateway-service: 
-        image: claudiapreda2307/gateway-service:init
-        environment:
-            BOOKS_SERVICE_API_ROUTE: books-service/api
-            NODE_ENV: development
+    gateway-service:
+        image: claudiapreda2307/knowcc-gateway:init
         ports:
-            - 5000:80
-        networks:
-            - gateway-books
-        depends_on:
-            - books-service
-    
-    books-service: 
-        image: claudiapreda2307/books-service:init
+            - 80:3000
         environment:
-            IO_SERVICE_API_ROUTE: io-service/api
             NODE_ENV: development
+            AUTH_SERVICE_HOST: auth-service
+            QUIZZES_SERVICE_HOST: quizzes-service
         networks:
-            - gateway-books
-            - books-io
+            - frontend-gateway-net
+            - backend-auth-net
         depends_on:
-            - io-service
-    
-    io-service: 
-        image: claudiapreda2307/io-service:init
+            - auth-service
+            - quizzes-service
+
+    auth-service:
+        image: claudiapreda2307/knowcc-auth:latest
         environment:
             PGUSER: admin
             PGPASSWORD: admin
             PGHOST: db
             PGPORT: 5432
-            PGDATABASE: books
+            PGDATABASE: knowcc
             NODE_ENV: development
         networks:
-            - books-io
-            - io-postgres
-
+            - backend-auth-net
+            - db-auth-net
+    
+    quizzes-service:
+        image: claudiapreda2307/knowcc-quizzes:init
+        environment:
+            IO_SERVICE_HOST: io-service
+            AUTH_SERVICE_HOST: auth-service
+            NODE_ENV: development
+        networks:
+            - backend-io-net
+            - backend-auth-net
+        depends_on:
+            - io-service
+          
+    io-service:
+        image: claudiapreda2307/knowcc-io:init
+        environment:
+            PGUSER: admin
+            PGPASSWORD: admin
+            PGHOST: db
+            PGPORT: 5432
+            PGDATABASE: knowcc
+            NODE_ENV: development
+        networks:
+            - db-io-net
+            - backend-io-net
         depends_on:
             - db
-    
+
     db:
         image: postgres:12
         environment:
-            POSTGRES_DB: books
+            POSTGRES_DB: knowcc
             POSTGRES_USER: admin
             POSTGRES_PASSWORD: admin
         volumes:
             - ./Database/init-db.sql:/docker-entrypoint-initdb.d/init.sql
             - postgres-volume:/var/lib/postgresql/data
-        networks:            
-            - io-postgres
-            - postgres-adminer
-    
+        networks:
+            - db-adminer-net
+            - db-io-net
+            - db-auth-net
+
     adminer:
         image: adminer
         ports:
             - 8080:8080
-        networks:
-            - postgres-adminer
         depends_on:
             - db
-
+            - gateway-service
+        networks:
+            - db-adminer-net
+            - frontend-gateway-net
+    
+    frontend-service:
+        image: claudiapreda2307/knowcc-frontend:init
+        ports:
+            - 8000:8000
+        environment:
+            NODE_ENV: development
+            REACT_APP_GATEWAY_SERVICE_HOST: localhost
+        networks:
+            - frontend-gateway-net
+        depends_on:
+            - gateway-service
+    
 networks:
-    gateway-books:
-    books-io:
-    io-postgres:
-    postgres-adminer:
-
+    db-adminer-net:
+    db-io-net:
+    db-auth-net:
+    backend-io-net:
+    frontend-gateway-net:
+    backend-auth-net:
 volumes:
     postgres-volume:

@@ -1,25 +1,14 @@
-version: '3.3'
+version: '3.8'
 
 services:
     gateway-service:
         build: ./ApiGatewayMicroservice
         ports:
-            - 3000:3000
+            - 80:3000
         environment:
             NODE_ENV: development
             AUTH_SERVICE_HOST: auth-service
             QUIZZES_SERVICE_HOST: quizzes-service
-        # deploy:
-        #     replicas: 3
-        #     placement:
-        #         max_replicas_per_node: 2
-        #     update_config:
-        #         parallelism: 2
-        #         delay: 10s
-        #     rollback_config:
-        #         order: stop-first
-        #     restart_policy:
-        #         condition: on-failure
         networks:
             - frontend-gateway-net
             - backend-auth-net
@@ -36,17 +25,6 @@ services:
             PGPORT: 5432
             PGDATABASE: knowcc
             NODE_ENV: development
-        # deploy:
-        #     replicas: 3
-        #     placement:
-        #         max_replicas_per_node: 2
-        #     update_config:
-        #         parallelism: 2
-        #         delay: 10s
-        #     rollback_config:
-        #         order: stop-first
-        #     restart_policy:
-        #         condition: on-failure
         networks:
             - backend-auth-net
             - db-auth-net
@@ -57,17 +35,6 @@ services:
             IO_SERVICE_HOST: io-service
             AUTH_SERVICE_HOST: auth-service
             NODE_ENV: development
-        # deploy:
-        #     replicas: 2
-        #     placement:
-        #         max_replicas_per_node: 1
-        #     update_config:
-        #         parallelism: 1
-        #         delay: 10s
-        #     rollback_config:
-        #         order: stop-first
-        #     restart_policy:
-        #         condition: on-failure
         networks:
             - backend-io-net
             - backend-auth-net
@@ -83,17 +50,6 @@ services:
             PGPORT: 5432
             PGDATABASE: knowcc
             NODE_ENV: development
-        # deploy:
-        #     replicas: 3
-        #     placement:
-        #         max_replicas_per_node: 2
-        #     update_config:
-        #         parallelism: 2
-        #         delay: 10s
-        #     rollback_config:
-        #         order: stop-first
-        #     restart_policy:
-        #         condition: on-failure
         networks:
             - db-io-net
             - backend-io-net
@@ -109,21 +65,14 @@ services:
         volumes:
             - ./Database/init-db.sql:/docker-entrypoint-initdb.d/init.sql
             - postgres-volume:/var/lib/postgresql/data
-        # deploy:
-        #     placement:
-        #         constraints: [node.role == manager]
         networks:
             - db-adminer-net
             - db-io-net
             - db-auth-net
-
     adminer:
         image: adminer
         ports:
             - 8080:8080
-        # deploy:
-        #     placement:
-        #         constraints: [node.role == manager]
         depends_on:
             - db
             - gateway-service
@@ -138,16 +87,6 @@ services:
         environment:
             NODE_ENV: development
             GATEWAY_SERVICE_HOST: localhost
-        # deploy:
-        #     replicas: 2
-        #     placement:
-        #         max_replicas_per_node: 1
-        #     update_config:
-        #         order: start-first
-        #     rollback_config:
-        #         order: stop-first
-        #     restart_policy:
-        #         condition: on-failure
         networks:
             - frontend-gateway-net
         depends_on:

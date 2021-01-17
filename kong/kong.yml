@@ -1,0 +1,26 @@
+_format_version: "2.1"
+
+services:
+
+  - name: login-service
+    url: http://knowcc-cluster_auth-service:3001/api/login
+    routes:
+      - name: login-service-route
+        paths: 
+          - /api/auth/login
+  
+  - name: register-service
+    url: http://knowcc-cluster_auth-service:3001/api/register
+    routes:
+      - name: register-service-route
+        paths:
+          - /api/auth/register
+          
+  - name: db-adminer
+    url: http://knowcc-cluster_adminer:8080
+    routes:
+      - name: adminer-service
+        paths:
+          - /adminer
+
+        
