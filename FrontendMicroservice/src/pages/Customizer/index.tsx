@@ -19,8 +19,10 @@ interface Category {
 export interface ICustomizerProps {
   categories: string[]
   users: User[]
+  chosenOpponent: User | null
   onKeywordChange: (keyword: string) => void
   onTestStart: (count: string, categories: string[]) => Promise<void>
+  onChosenOpponentChange: (id: number) => void
 }
 
 const MAX_COUNT = 15
@@ -29,7 +31,6 @@ export default function Customizer(props: ICustomizerProps) {
   const [categories, setCategories] = React.useState<Category[]>([])
   const [count, setCount] = React.useState('5')
   const [keyword, setKeyword] = React.useState('')
-  const [chosenOpponent, setChosenOpponent] = React.useState<User | null>(null)
 
   React.useEffect(() => {
     setCategories(props.categories.map(
@@ -59,7 +60,8 @@ export default function Customizer(props: ICustomizerProps) {
   }
 
   const onUserBoxClick = (id: number) => {
-    setChosenOpponent(props.users.find(user => user.id === id) || null)
+    // setChosenOpponent(props.users.find(user => user.id === id) || null)
+    props.onChosenOpponentChange(id)
     setKeyword('')
     props.onKeywordChange('')
   }
@@ -79,21 +81,12 @@ export default function Customizer(props: ICustomizerProps) {
   }
 
   const categoryBoxes = categories.map(category => (
-    // <div key={category.label}>
-    //   <p>{category.label}</p>
-    //   <input
-    //     type='checkbox'
-    //     id={category.label}
-    //     checked={category.checked}
-    //     onChange={() => onCheckboxChange(category.label)}
-    //   />
-    // </div>
     <CategoryBox key={category.label} label={category.label} checked={category.checked} onChange={() => onCheckboxChange(category.label)} />
   ))
 
   return (
     <div className='Customizer'>
-      <h1>Let's Play</h1>
+      <h1>Let's Play, {localStorage.getItem('knowcc_username')}!</h1>
       <h2>Choose topics</h2>
       <div className='Categories'>
         {categoryBoxes}
@@ -111,7 +104,7 @@ export default function Customizer(props: ICustomizerProps) {
           setKeyword(value)
         }}
       />
-      <UserBox data={chosenOpponent} />
+      <UserBox data={props.chosenOpponent} />
       <div className='StartButton'>
         <Button text='Start Test' onClick={onStartTest} />
       </div>

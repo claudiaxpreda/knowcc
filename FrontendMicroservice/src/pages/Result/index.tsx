@@ -27,7 +27,7 @@ export default function Result(props: IResultProps) {
     <div className='Result'>
       <h1>{moment(props.result.testStart).format('lll')}</h1>
       <h1>Duration: {Math.round(moment.duration(end.diff(start)).asSeconds())} seconds</h1>
-      <h2>Score: {props.result.correctAnswersCount}/{props.result.correctAnswersCount} </h2>
+      <h2>Score: {props.result.correctAnswersCount}/{props.result.questionsCount} </h2>
       {content}
     </div>
   )

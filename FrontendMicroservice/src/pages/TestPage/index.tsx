@@ -10,7 +10,7 @@ import './index.scss'
 
 export interface ITestPageProps {
   questionsSet: QuestionsSet
-  onTestFinish: () => void
+  onTestFinish: (testId: number) => void
 }
 
 export default function TestPage(props: ITestPageProps) {
@@ -25,7 +25,7 @@ export default function TestPage(props: ITestPageProps) {
     addAnswer(props.questionsSet.test_id, answer, questionId)
 
     if (current === questionsCount) {
-      props.onTestFinish()
+      props.onTestFinish(props.questionsSet.test_id)
       return
     }
 

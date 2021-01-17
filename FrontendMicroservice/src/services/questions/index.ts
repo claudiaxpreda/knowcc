@@ -47,6 +47,16 @@ export const getTestResultById = async (testId: number) => {
   }
 }
 
+export const createTest = async () => {
+  try {
+    const response = await AxiosInstance.post(`/api/tests/`, {}, getConfig())
+
+    return response.data as number
+  } catch(e) {
+    return e.status
+  }
+}
+
 export const getHistory = async () => {
   try {
     const response = await AxiosInstance.get(`/api/tests/`, getConfig())

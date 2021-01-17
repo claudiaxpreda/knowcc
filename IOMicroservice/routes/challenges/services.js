@@ -19,7 +19,7 @@ const getChallengesByUserId = async (userId) => {
   console.log('Getting one users challenges ...')
 
   try {
-    const challenges = await query(`SELECT c.id, c.created_at, t.user_id as original_user_id, c.opponent_user_id, c.original_test_id, c.accepted_test_id FROM challenges c JOIN tests t ON c.original_test_id = t.id WHERE t.user_id = ${userId} OR c.opponent_user_id = ${userId}`)
+    const challenges = await query(`SELECT c.id, c.created_at, t.user_id as original_user_id, c.opponent_user_id, c.original_test_id, c.accepted_test_id FROM challenges c JOIN tests t ON c.original_test_id = t.id WHERE t.user_id = ${userId} OR c.opponent_user_id = ${userId} ORDER BY c.created_at DESC`)
     const challengesWithTests = await Promise.all(challenges.map(async item => {
       let test = {}
       const originalTest = await getTestById(item.original_user_id, item.original_test_id)

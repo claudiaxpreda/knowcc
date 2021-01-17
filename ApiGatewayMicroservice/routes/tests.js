@@ -24,6 +24,7 @@ Router.get('/', async (req, res) => {
 })
 
 Router.post('/', async (req, res) => {
+  console.log(req.headers)
   const token = req.headers.authorization.split(' ')[1]
 
   console.info(`Forwarding request for creating new test ...`)

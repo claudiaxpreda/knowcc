@@ -26,6 +26,7 @@ export interface TestResult {
 
 export interface Answer {
   id: number
+  questionId: number
   answerCreatedAt: string
   testCreatedAt: string
   answer: string

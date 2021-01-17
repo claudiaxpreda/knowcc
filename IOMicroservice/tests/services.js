@@ -11,10 +11,11 @@ const createTest = async (userId) => {
 const getTestById = async (userId, testId) => {
   console.info('Getting test by id ...')
 
-  const answers = await query(`SELECT a.id, a.created_at as answer_created_at, t.created_at as test_created_at, a.answer, q.text, q.correct_answer, q.answer1, q.answer2, q.answer3, q.answer4, q.category, q.answers_count, q.correct_answers_count FROM answers a JOIN tests t ON t.id = a.test_id JOIN questions q ON q.id = a.question_id  WHERE t.user_id = ${userId} and t.id = ${testId}`)
+  const answers = await query(`SELECT a.id, q.id as question_id, a.created_at as answer_created_at, t.created_at as test_created_at, a.answer, q.text, q.correct_answer, q.answer1, q.answer2, q.answer3, q.answer4, q.category, q.answers_count, q.correct_answers_count FROM answers a JOIN tests t ON t.id = a.test_id JOIN questions q ON q.id = a.question_id  WHERE t.user_id = ${userId} and t.id = ${testId}`)
 
   return answers.map(item => ({
     id: item.id,
+    questionId: item.question_id,
     answerCreatedAt: item.answer_created_at,
     testCreatedAt: item.test_created_at,
     answer: item.answer,

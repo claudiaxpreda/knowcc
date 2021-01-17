@@ -12,3 +12,29 @@ export const getChallenges = async () => {
     return []
   }
 }
+
+export const createChallenge = async (testId: number, opponentId: number) => {
+  try {
+    const response = await AxiosInstance.post(`/api/challenges/`, {
+      originalTestId: testId,
+      challengedUserId: opponentId
+    }, getConfig())
+
+    return response.data
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+export const updateChallenge = async (testId: number, challengeId: number) => {
+  try {
+    const response = await AxiosInstance.patch(`/api/challenges/`, {
+      testId,
+      challengeId
+    }, getConfig())
+
+    return response.data
+  } catch(e) {
+    console.log(e)
+  }
+}
