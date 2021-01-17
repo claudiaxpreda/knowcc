@@ -5,6 +5,7 @@ import { Page } from 'routes/Main'
 import FaHome from '@meronex/icons/fa/FaHome'
 import FaGamepad from '@meronex/icons/fa/FaGamepad'
 import FaHistory from '@meronex/icons/fa/FaHistory'
+import FaSignOutAlt from '@meronex/icons/fa/FaSignOutAlt'
 
 import './index.scss'
 
@@ -22,6 +23,12 @@ export interface IFooterButtonProps {
 }
 
 export default function Footer(props: IFooterProps) {
+  const onLogout = (_: Page) => {
+    localStorage.removeItem('jwt_token')
+    localStorage.removeItem('knowcc_username')
+    window.location.reload()
+  }
+
   return (
     <div className='Footer'>
       <FooterButton
@@ -44,6 +51,13 @@ export default function Footer(props: IFooterProps) {
         icon={FaGamepad}
         selected={props.currentPage === 'challenges'}
         onClick={props.onPageChange}
+      />
+      <FooterButton
+        text='Logout'
+        navigateTo='customizer'
+        icon={FaSignOutAlt}
+        selected={false}
+        onClick={onLogout}
       />
     </div>
   );
