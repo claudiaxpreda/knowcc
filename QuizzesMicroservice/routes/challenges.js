@@ -1,9 +1,10 @@
 const Router = require('express').Router()
 
 const { sendRequest } = require('../http-client')
-const { verifyAndDecodeToken } = require('../utils')
+const { verifyAndDecodeToken, answersArrayToTestObject } = require('../utils')
 
 const IO_SERVICE_HOST = process.env.IO_SERVICE_HOST || 'localhost'
+const EMAIL_SERVICE_HOST = process.env.EMAIL_SERVICE_HOST || 'localhost'
 
 Router.get('/', async (req, res) => {
   console.info('Forwarding request for getting all challenges ...')
@@ -20,11 +21,17 @@ Router.get('/', async (req, res) => {
 
   const response = await sendRequest(options)
 
-  res.json(response)
+  res.json(
+    response.map(challenge => ({
+      ...challenge,
+      originalTest: answersArrayToTestObject(challenge.originalTest),
+      opponentTest: answersArrayToTestObject(challenge.opponentTest)
+    }))
+  )
 })
 
 Router.post('/', async (req, res) => {
-  const { originalTestId, challengedUserId } = req.body
+  const { originalTestId, challengedUserId, opponentUsername, opponentEmail } = req.body
 
   console.info('Forwarding request for creating new challenge ...')
 
@@ -43,6 +50,17 @@ Router.post('/', async (req, res) => {
   }
 
   const response = await sendRequest(options)
+
+  const emailOptions = {
+    url: `http://${EMAIL_SERVICE_HOST}:3005/api/email/`,
+    method: 'POST',
+    data: {
+      username: opponentUsername,
+      email: opponentEmail
+    }
+  }
+
+  await sendRequest(emailOptions)
 
   res.json(response)
 })

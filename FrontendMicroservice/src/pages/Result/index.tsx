@@ -1,32 +1,17 @@
 import * as React from 'react'
+import moment from 'moment'
 
 import AnswerReview from 'pages/Result/components/AnswerReview'
 
-// import { addAnswer } from 'pages/Result/components/AnswerReview'
 import { TestResult } from 'services/questions/types'
 
-// import './index.scss'
+import './index.scss'
 
 export interface IResultProps {
   result: TestResult
 }
 
 export default function Result(props: IResultProps) {
-  // React.useEffect(() => {
-  //   setQuestionsCount(props.questionsSet.questions.length)
-  //   setCurrent(1)
-  // }, [props.questionsSet])
-
-  // const onAnswerClick = (answer: string, questionId: number) => {
-  //   addAnswer(props.questionsSet.test_id, answer, questionId)
-
-  //   if (current === questionsCount) {
-  //     props.onTestFinish()
-  //   }
-
-  //   setCurrent(current + 1)
-  // }
-
   const content = props.result.answers.map(
     question => (
       <AnswerReview
@@ -35,9 +20,14 @@ export default function Result(props: IResultProps) {
       />
     )
   )
+  const start = moment(props.result.testStart)
+  const end = moment(props.result.testFinish)
 
   return (
     <div className='Result'>
+      <h1>{moment(props.result.testStart).format('lll')}</h1>
+      <h1>Duration: {Math.round(moment.duration(end.diff(start)).asSeconds())} seconds</h1>
+      <h2>Score: {props.result.correctAnswersCount}/{props.result.questionsCount} </h2>
       {content}
     </div>
   )

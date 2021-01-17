@@ -6,7 +6,7 @@ import { Question } from 'services/questions/types'
 
 import { shuffleArray } from 'utils'
 
-// import './index.scss'
+import './index.scss'
 
 export interface IQuestionProps {
   data: Question
@@ -26,8 +26,10 @@ export default function QuestionComponent(props: IQuestionProps) {
 
   return (
     <div className='Question'>
-      <p>{props.data.text}</p>
-      {shuffleArray(answers)}
+      <h1>{props.data.text}</h1>
+      <div className='AnswersList'>
+        {shuffleArray(answers)}
+      </div>
     </div>
   )
 }

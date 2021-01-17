@@ -6,7 +6,7 @@ const { verifyAndDecodeToken } = require('../utils')
 const IO_SERVICE_HOST = process.env.IO_SERVICE_HOST || 'localhost'
 
 Router.get('/', async (req, res) => {
-  const { keyword } = req.query
+  const { keyword, id } = req.query
 
   try {
     const token = req.headers.authorization.split(' ')[1]
@@ -15,7 +15,8 @@ Router.get('/', async (req, res) => {
     const options = {
       url: `http://${IO_SERVICE_HOST}:3003/api/users/`,
       params: {
-        keyword
+        keyword,
+        id
       }
     }
 

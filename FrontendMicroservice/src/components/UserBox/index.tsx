@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import { User } from 'services/users/types'
 
+import './index.scss'
+
 export interface IAnswerReviewProps {
   data: User | null
   onClick?: (id: number) => void
@@ -17,7 +19,7 @@ export default function AnswerReviewComponent(props: IAnswerReviewProps) {
   if (!props.data) {
     return (
       <div className='UserBox' onClick={onClick}>
-        <p>placeholder</p>
+        <p className='placeholder'>no user selected</p>
       </div>
     )
   }

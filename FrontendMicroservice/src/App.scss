@@ -1,10 +1,10 @@
 .App {
   text-align: center;
 
-  background: darkblue;
+  background-color: var(--background-color);
   color: white;
 
-  padding: 0 200px;
+  padding: 0 calc((100vw - 400px) / 2);
   box-sizing: border-box;
 
   width: 100vw;
