@@ -13,11 +13,13 @@ export const getChallenges = async () => {
   }
 }
 
-export const createChallenge = async (testId: number, opponentId: number) => {
+export const createChallenge = async (testId: number, opponentId: number, opponentUsername: string, opponentEmail: string) => {
   try {
     const response = await AxiosInstance.post(`/api/challenges/`, {
       originalTestId: testId,
-      challengedUserId: opponentId
+      challengedUserId: opponentId,
+      opponentUsername,
+      opponentEmail
     }, getConfig())
 
     return response.data

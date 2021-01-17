@@ -22,7 +22,7 @@ Router.get('/', async (req, res) => {
 Router.post('/', async (req, res) => {
   const token = req.headers.authorization.split(' ')[1]
 
-  const { originalTestId, challengedUserId } = req.body
+  const { originalTestId, challengedUserId, opponentUsername, opponentEmail } = req.body
 
   console.info(`Forwarding request for creating new challenge ...`)
 
@@ -31,7 +31,9 @@ Router.post('/', async (req, res) => {
     method: 'POST',
     data: {
       originalTestId,
-      challengedUserId
+      challengedUserId,
+      opponentUsername,
+      opponentEmail
     },
     headers: { Authorization: `Bearer ${token}` }
   }

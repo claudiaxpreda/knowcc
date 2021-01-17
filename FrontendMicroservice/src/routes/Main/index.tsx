@@ -8,7 +8,6 @@ import Result from 'pages/Result'
 import Challenges from 'pages/Challenges'
 import History from 'pages/History'
 
-// import Header from 'components/Header'
 import Footer from 'components/Footer'
 
 /* ---------------------- 📡 Request methods and types ---------------------- */
@@ -69,7 +68,7 @@ export default function Main() {
     setHistory(history)
 
     if (chosenOpponent) {
-      await createChallenge(testId, chosenOpponent.id)
+      await createChallenge(testId, chosenOpponent.id, chosenOpponent.username, chosenOpponent.email)
     }
 
     const challenges = await getChallenges()
