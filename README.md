@@ -4,6 +4,11 @@ Aplicatia knowCC reprezinta o platforma prin intermediul careia utilizatorii
 isi pot testa cunostintele in materie de cultura generala, si pot, de asemenea,
 sa isi provoace prietenii pentru a-si compara rezultatele.
 
+Repository-uri
+
+- https://github.com/claudiaxpreda/knowcc
+- https://gitlab.com/ccbonus
+
 ## FUNCTIONALITATI
 
 Primul pas pe care un utilizator trebuie sa il faca este a-si crea un cont nou.
@@ -103,3 +108,7 @@ Mediu de rulare: 1 manager + 2 workeri. <br/>
   `docker stack deploy -c stack-api.yml nocc-cluster`
 - pe local rulam: <br/>
   `docker-compose -f docker-compose-image.yml up -d`
+
+## BONUS
+
+Pentru functionalitatea de CI/CD pusa la dispozite de GitLab am folosit fisierul stack-gitlab.yml
