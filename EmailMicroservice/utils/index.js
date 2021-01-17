@@ -1,10 +1,11 @@
 const nodemailer = require('nodemailer')
+const { getSecret } = require('docker-secret')
 
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD
+    user: process.env.NODE_ENV === 'development' ? process.env.EMAIL : getSecret(process.env.EMAIL_FILE),
+    pass: process.env.NODE_ENV === 'development' ? process.env.PASSWORD : getSecret(process.env.PASSWORD_FILE),
   }
 })
 
