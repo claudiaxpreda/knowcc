@@ -30,7 +30,8 @@ const answersArrayToTestObject = (answers) => {
 
       return formattedItem
     })
-    const correctAnswersCount = formattedAnswers.reduce((acc, item) => item.answer === item.correct_answer ? acc + 1 : acc, 0)
+    const correctAnswersCount = formattedAnswers.reduce((acc, item) => item.answer === item.correctAnswer ? acc + 1 : acc, 0)
+    console.log(correctAnswersCount)
 
     return {
       testStart: testStartTimestamp,

@@ -32,16 +32,6 @@ export default function TestPage(props: ITestPageProps) {
     setCurrent(current + 1)
   }
 
-  const content = props.questionsSet.questions.map(
-    question => (
-      <Question
-        key={question.id}
-        data={question}
-        onAnswerClick={onAnswerClick}
-      />
-    )
-  )
-
   const getCurrentQuestion = () => {
     const { questions } = props.questionsSet
 

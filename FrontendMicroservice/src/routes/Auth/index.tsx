@@ -34,6 +34,7 @@ export default function Auth(props: IAuthProps) {
       const response = await login(username, password)
 
       localStorage.setItem('jwt_token', response.token)
+      localStorage.setItem('knowcc_username', username)
       props.onPageChange()
     } catch (e) {
       Swal.fire({

@@ -33,7 +33,7 @@ const getTestById = async (userId, testId) => {
 const getTestByUserId = async (userId) => {
   console.info('Getting test by user id ...')
 
-  const testIds = await query(`SELECT id from tests where user_id = ${userId}`)
+  const testIds = await query(`SELECT id from tests where user_id = ${userId} ORDER BY created_at DESC`)
 
   console.log(testIds)
 

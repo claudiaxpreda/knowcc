@@ -2,7 +2,7 @@ import AxiosInstance from 'services/axios'
 
 import getConfig from 'services/axios/config'
 
-import { Question } from 'services/questions/types' 
+import { Question, TestResult } from 'services/questions/types' 
 
 export const getCategories = async () => {
   try {
@@ -42,6 +42,16 @@ export const getTestResultById = async (testId: number) => {
     const response = await AxiosInstance.get(`/api/tests?id=${testId}`, getConfig())
 
     return response.data
+  } catch(e) {
+    return e.status
+  }
+}
+
+export const getHistory = async () => {
+  try {
+    const response = await AxiosInstance.get(`/api/tests/`, getConfig())
+
+    return response.data.tests as TestResult[]
   } catch(e) {
     return e.status
   }

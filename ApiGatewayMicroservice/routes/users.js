@@ -6,14 +6,15 @@ const QUIZZES_SERVICE_HOST = process.env.QUIZZES_SERVICE_HOST || 'localhost'
 
 Router.get('/', async (req, res) => {
   const token = req.headers.authorization.split(' ')[1]
-  const { keyword } = req.query
+  const { keyword, id } = req.query
 
   console.info(`Forwarding request for getting list of users containing '${keyword}' keyword ...`)
 
   const options = {
     url: `http://${QUIZZES_SERVICE_HOST}:3004/api/users/`,
     params: {
-      keyword
+      keyword,
+      id
     },
     headers: { Authorization: `Bearer ${token}` }
   }

@@ -8,7 +8,7 @@ export interface ITestProgressProps {
 }
 
 export default function TestProgress(props: ITestProgressProps) {
-  const totalCountLengthArray = Array.apply(null, Array(props.total)).map(() => { })
+  const totalCountLengthArray = Array.apply(null, Array(props.total)).map(() => null)
 
   return (
     <div className='TestProgress' style={{ gridTemplateColumns: `repeat(${props.total}, 1fr)` }}>

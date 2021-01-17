@@ -1,14 +1,23 @@
 const Router = require('express').Router()
 
-const { getUsersByKeyword } = require('./services.js')
+const { getUsersByKeyword, getUserById } = require('./services.js')
 
 Router.get('/', async (req, res) => {
-  const { keyword } = req.query
+  const { keyword, id } = req.query
 
   try {
-    const users = await getUsersByKeyword(keyword)
+    if (keyword) {
+      const users = await getUsersByKeyword(keyword)
 
-    res.json({ users })
+      res.json({ users })
+    } else {
+      if (id) {
+        const users = await getUserById(id)
+
+        res.json({ users })
+      }
+    }
+
   } catch (e) {
     res.status(500).json({ success: false })
   }

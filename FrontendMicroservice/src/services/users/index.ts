@@ -13,3 +13,13 @@ export const getUsersByKeyword = async (keyword: string) => {
     return e.status
   }
 }
+
+export const getUserById = async (id: number) => {
+  try {
+    const response = await AxiosInstance.get(`/api/users/?id=${id}`, getConfig())
+
+    return response.data.users[0] as User
+  } catch(e) {
+    return e.status
+  }
+}
