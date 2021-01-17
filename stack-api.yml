@@ -74,6 +74,7 @@ services:
             - backend-auth-net
         depends_on:
             - io-service
+            - email-service
           
     io-service:
         image: claudiapreda2307/knowcc-io:init
@@ -103,6 +104,27 @@ services:
             - backend-io-net
         depends_on:
             - db
+
+    email-service:
+        image: claudiapreda2307/knowcc-email:init
+        environment:
+            EMAIL_FILE: email-email-secret
+            PASSWORD_FILE: email-password-secret
+            NODE_ENV: staging
+        secrets:
+            - email-password-secret
+            - email-email-secret
+        deploy:
+            replicas: 2
+            placement:
+                max_replicas_per_node: 2
+            update_config:
+                parallelism: 1
+                delay: 10s
+            restart_policy:
+                condition: on-failure
+        networks:
+            - backend-io-net
 
     db:
         image: postgres:12
@@ -139,7 +161,7 @@ services:
         image: claudiapreda2307/knowcc-frontend:init
         environment:
             NODE_ENV: development
-            REACT_APP_GATEWAY_SERVICE_HOST: 192.168.99.100
+            REACT_APP_GATEWAY_SERVICE_HOST: knowcc-cluster_gateway-service
         deploy:
             replicas: 2
             placement:
@@ -161,7 +183,9 @@ services:
             - 80:80
         deploy:
             placement:
-                constraints: [node.role == manager]
+                constraints: [node.role == manager]            
+            restart_policy:
+                condition: on-failure
         networks:
             - internal
             - frontend-gateway-net
@@ -187,3 +211,7 @@ secrets:
         file: ./secrets/db-password-secret.txt
     db-user-secret:
         file: ./secrets/db-user-secret.txt
+    email-password-secret:
+        file: ./secrets/email-password-secret.txt
+    email-email-secret:
+        file: ./secrets/email-email-secret.txt
