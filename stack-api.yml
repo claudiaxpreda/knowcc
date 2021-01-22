@@ -7,6 +7,8 @@ services:
             NODE_ENV: development
             AUTH_SERVICE_HOST: knowcc-cluster_auth-service
             QUIZZES_SERVICE_HOST: knowcc-cluster_quizzes-service
+        ports:
+            - 3000:3000
         deploy:
             replicas: 3
             placement:
@@ -19,7 +21,7 @@ services:
             restart_policy:
                 condition: on-failure
         networks:
-            - frontend-gateway-net
+            # - frontend-gateway-net
             - backend-auth-net
         depends_on:
             - auth-service
@@ -57,6 +59,7 @@ services:
         environment:
             IO_SERVICE_HOST: knowcc-cluster_io-service
             AUTH_SERVICE_HOST: knowcc-cluster_auth-service
+            EMAIL_SERVICE_HOST: knowcc-cluster_email-service
             NODE_ENV: development
         deploy:
             replicas: 2
@@ -137,7 +140,7 @@ services:
             - db-user-secret
         volumes:
             - ./Database/init-db.sql:/docker-entrypoint-initdb.d/init.sql
-            - pdocostgres-volume:/var/lib/postgresql/data
+            - postgres-volume:/var/lib/postgresql/data
         deploy:
             placement:
                 constraints: [node.role == manager]
@@ -151,17 +154,20 @@ services:
         deploy:
             placement:
                 constraints: [node.role == manager]
+        ports:
+            - 8080:8080
         depends_on:
             - db
         networks:
             - db-adminer-net
-            - internal
     
     frontend-service:
         image: claudiapreda2307/knowcc-frontend:init
         environment:
             NODE_ENV: development
-            REACT_APP_GATEWAY_SERVICE_HOST: knowcc-cluster_gateway-service
+            REACT_APP_GATEWAY_SERVICE_HOST: 192.168.99.100
+        ports:
+            - 8001:8000
         deploy:
             replicas: 2
             placement:
@@ -172,6 +178,8 @@ services:
                 order: stop-first
             restart_policy:
                 condition: on-failure
+        networks:
+            - frontend-gateway-net
         depends_on:
             - gateway-service
         
@@ -179,8 +187,6 @@ services:
         image: nginx:alpine
         volumes:
             - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-        ports:
-            - 80:80
         deploy:
             placement:
                 constraints: [node.role == manager]            
@@ -188,7 +194,6 @@ services:
                 condition: on-failure
         networks:
             - internal
-            - frontend-gateway-net
         depends_on:
             - frontend-service
             - adminer

@@ -1,23 +1,28 @@
 version: '3.3'
 
 services:
-    kong:
-        image: kong:latest
-        volumes:
-         - ./kong:/usr/local/kong/declarative
-        environment:
-            KONG_DATABASE: 'off'
-            KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
-            KONG_PROXY_ACCESS_LOG: /dev/stdout
-            KONG_ADMIN_ACCESS_LOG: /dev/stdout
-            KONG_PROXY_ERROR_LOG: /dev/stderr
-            KONG_ADMIN_ERROR_LOG: /dev/stderr
-            KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+    gateway-service:
+        image: claudiapreda2307/knowcc-gateway:init
         ports:
-            - 80:8000
-            - 443:8443
+            - 3000:3000
+        environment:
+            NODE_ENV: development
+            AUTH_SERVICE_HOST: knowcc-cluster_auth-service
+            QUIZZES_SERVICE_HOST: knowcc-cluster_quizzes-service
+        # deploy:
+        #     replicas: 3
+        #     placement:
+        #         max_replicas_per_node: 2
+        #     update_config:
+        #         parallelism: 2
+        #         delay: 10s
+        #     rollback_config:
+        #         order: stop-first
+        #     restart_policy:
+        #         condition: on-failure
         networks:
-            - gateway-net
+            - frontend-gateway-net
+            - backend-auth-net
         depends_on:
             - auth-service
             - quizzes-service
@@ -43,7 +48,7 @@ services:
         #     restart_policy:
         #         condition: on-failure
         networks:
-            - gateway-net
+            - backend-auth-net
             - db-auth-net
     
     quizzes-service:
@@ -65,7 +70,7 @@ services:
         #         condition: on-failure
         networks:
             - backend-io-net
-            - gateway-net
+            - backend-auth-net
         depends_on:
             - io-service
           
@@ -114,6 +119,8 @@ services:
 
     adminer:
         image: adminer
+        ports:
+            - 8080:8080
         deploy:
             placement:
                 constraints: [node.role == manager]
@@ -122,10 +129,12 @@ services:
             - gateway-service
         networks:
             - db-adminer-net
-            - gateway-net
+            - frontend-gateway-net
     
     frontend-service:
         image: claudiapreda2307/knowcc-frontend:init
+        ports:
+            - 8000:8000
         environment:
             NODE_ENV: development
             REACT_APP_GATEWAY_SERVICE_HOST: 192.168.99.100
@@ -139,6 +148,8 @@ services:
         #         order: stop-first
         #     restart_policy:
         #         condition: on-failure
+        networks:
+            - frontend-gateway-net
         depends_on:
             - gateway-service
     
@@ -147,6 +158,7 @@ networks:
     db-io-net:
     db-auth-net:
     backend-io-net:
-    gateway-net:
+    frontend-gateway-net:
+    backend-auth-net:
 volumes:
     postgres-volume:
